@@ -12,12 +12,10 @@ install:
 - pip install .
 stages:
 - lint
-- test
 jobs:
   include:
   - stage: lint
     script: flake8 --max-line-length 120
-script: pytest
 deploy:
   provider: pypi
   user: "__token__"
