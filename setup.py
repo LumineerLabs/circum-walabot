@@ -8,7 +8,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 
 setup(
-    name='circum_walabot',
+    name='circum-walabot',
     version_format='{tag}',
     author="Lane Haury",
     author_email="lane@lumineerlabs.com",
@@ -28,7 +28,7 @@ setup(
         'setuptools-git-version'
     ],
     entry_points={
-        'circum.plugins': [
+        'circum.sensors': [
             'walabot=circum_walabot.walabot:walabot'
         ]
     },

@@ -10,7 +10,7 @@ import importlib.machinery
 
 logger = logging.getLogger(__name__)
 tracking_semaphore = None
-tracking_info = {"people": []}
+tracking_info = {"objects": []}
 vector_info = []
 updated = False
 
@@ -37,14 +37,14 @@ def _update_thread(wlbt):
         tracking_semaphore.acquire()
 
         if targets and targets is not None:
-            tracking_info["people"] = \
+            tracking_info["objects"] = \
                 [{"x": target.xPosCm / 100, "y": target.yPosCm / 100, "z": target.zPosCm / 100} for target in targets]
             for i, target in enumerate(targets):
                 logger.debug('Target #{}:\nx: {}\ny: {}\nz: {}\namplitude: {}\n'.format(
                     i + 1, target.xPosCm, target.yPosCm, target.zPosCm,
                     target.amplitude))
         else:
-            tracking_info["people"] = []
+            tracking_info["objects"] = []
 
         updated = True
 
