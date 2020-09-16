@@ -1,5 +1,4 @@
 import click
-import circum.endpoint
 import copy
 import logging
 import os
@@ -36,13 +35,12 @@ def _update_thread(wlbt):
 
         tracking_semaphore.acquire()
 
+        # invert x to convert from left hand walabot coordinates to right hand circum sensor coordinates
         if targets and targets is not None:
             tracking_info["objects"] = \
-                [{"x": target.xPosCm / 100, "y": target.yPosCm / 100, "z": target.zPosCm / 100} for target in targets]
+                [{"x": -1 * target.xPosCm / 100, "y": target.yPosCm / 100, "z": target.zPosCm / 100} for target in targets]
             for i, target in enumerate(targets):
-                logger.debug('Target #{}:\nx: {}\ny: {}\nz: {}\namplitude: {}\n'.format(
-                    i + 1, target.xPosCm, target.yPosCm, target.zPosCm,
-                    target.amplitude))
+                logger.debug(f'Target #{i + 1}: [x: {-1 * target.xPosCm:.2f}, y: {target.yPosCm:.2f}, z: {target.zPosCm:.2f}] amplitude: {target.amplitude:.2f}')
         else:
             tracking_info["objects"] = []
 
@@ -127,6 +125,7 @@ def _connect_to_and_initialize_device(wlbt,
               help='Location Walabot API was installed in')
 @click.pass_context
 def walabot(ctx, api_location: str):
+    import circum.endpoint
     global tracking_semaphore
     tracking_semaphore = Semaphore()
     if api_location is None:
