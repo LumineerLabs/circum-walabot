@@ -1,10 +1,10 @@
-import click
 import copy
+import importlib.machinery
 import logging
 import os
-
 from threading import Semaphore, Thread
-import importlib.machinery
+
+import click
 
 
 logger = logging.getLogger(__name__)
@@ -38,9 +38,17 @@ def _update_thread(wlbt):
         # invert x to convert from left hand walabot coordinates to right hand circum sensor coordinates
         if targets and targets is not None:
             tracking_info["objects"] = \
-                [{"x": -1 * target.xPosCm / 100, "y": target.yPosCm / 100, "z": target.zPosCm / 100} for target in targets]
+                [{
+                    "x": -1 * target.xPosCm / 100,
+                    "y": target.yPosCm / 100,
+                    "z": target.zPosCm / 100
+                 } for target in targets]
             for i, target in enumerate(targets):
-                logger.debug(f'Target #{i + 1}: [x: {-1 * target.xPosCm:.2f}, y: {target.yPosCm:.2f}, z: {target.zPosCm:.2f}] amplitude: {target.amplitude:.2f}')
+                logger.debug(f'Target #{i + 1}: '
+                             f'[x: {-1 * target.xPosCm:.2f}, '
+                             f'y: {target.yPosCm:.2f}, '
+                             f'z: {target.zPosCm:.2f}] '
+                             f'amplitude: {target.amplitude:.2f}')
         else:
             tracking_info["objects"] = []
 
