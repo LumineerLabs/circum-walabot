@@ -127,7 +127,7 @@ def _create_tracker_thread(wlbt):
     tracker_thread.start()
 
 
-def _cli(ctx, api_location):
+def walabot(ctx, api_location):
     import circum.endpoint
     global tracking_semaphore
     tracking_semaphore = Semaphore()
@@ -158,5 +158,5 @@ def _cli(ctx, api_location):
               default=None,
               help='Location Walabot API was installed in')
 @click.pass_context
-def walabot(ctx, api_location: str):
-    _cli(ctx, api_location)
+def walabot_command(ctx, api_location: str):
+    walabot(ctx, api_location)

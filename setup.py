@@ -30,7 +30,7 @@ setup(
     ],
     entry_points={
         'circum.sensors': [
-            'walabot=circum_walabot.walabot:walabot'
+            'walabot=circum_walabot.walabot:walabot_command'
         ]
     },
     extras_require={
