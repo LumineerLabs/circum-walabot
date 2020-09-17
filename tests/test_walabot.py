@@ -1,9 +1,9 @@
-from unittest.mock import PropertyMock, MagicMock, call, patch, DEFAULT
+from unittest.mock import DEFAULT, MagicMock, PropertyMock, call, patch
 
 import circum.endpoint  # noqa: F401
 
 import circum_walabot.walabot
-from circum_walabot.walabot import _cli, run_walabot, _update_thread
+from circum_walabot.walabot import _cli, _update_thread, run_walabot
 
 import pytest
 
@@ -247,11 +247,10 @@ def test_run_walabot_updated_false():
             call.release(),
         ]
 
-        assert circum_walabot.walabot.updated == False
+        assert not circum_walabot.walabot.updated
         assert run_walabot(None) is None
 
         tracking_semaphore.assert_has_calls(expected_calls)
-
 
 
 def test_run_walabot_updated_true():
