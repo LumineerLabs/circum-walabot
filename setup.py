@@ -25,7 +25,8 @@ setup(
     install_requires=[
         'circum',
         'click',
-        'setuptools-git-version'
+        'setuptools-git-version',
+        'pytest'
     ],
     entry_points={
         'circum.sensors': [

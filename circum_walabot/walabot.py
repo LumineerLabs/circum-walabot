@@ -69,19 +69,15 @@ def run_walabot(simulator_args: {}) -> {}:
     return ret
 
 
+def _load_api(walabot_py):
+    return importlib.machinery.SourceFileLoader('WalabotAPI', walabot_py).load_module()
+
+
 def _initialize_api(api_location: str):
-    # dll_name = None
-
-    # if os.name == 'nt':
-    #     dll_name = 'bin/WalabotAPI.dll'
-    # else
-    #     dll_name = 'bin/libWalabotAPI.so'
-
     walabot_py = os.path.join(api_location, 'python/WalabotAPI.py')
-    # walabot_dll = path.combine(walabot_api, dll_name)
 
-    wlbt = importlib.machinery.SourceFileLoader('WalabotAPI', walabot_py).load_module()
-    wlbt.Init()  # walabot_dll)
+    wlbt = _load_api(walabot_py)
+    wlbt.Init()
 
     wlbt.Initialize()
 
@@ -125,17 +121,17 @@ def _connect_to_and_initialize_device(wlbt,
             wlbt.Trigger()
 
 
-@click.command()
-@click.option('--api_location',
-              required=False,
-              type=str,
-              default=None,
-              help='Location Walabot API was installed in')
-@click.pass_context
-def walabot(ctx, api_location: str):
+def _create_tracker_thread(wlbt):
+    tracker_thread = Thread(target=_update_thread, args=[wlbt])
+    tracker_thread.daemon = True
+    tracker_thread.start()
+
+
+def _cli(ctx, api_location):
     import circum.endpoint
     global tracking_semaphore
     tracking_semaphore = Semaphore()
+
     if api_location is None:
         if os.name == "nt":
             api_location = 'C:/Program Files/Walabot/WalabotSDK/'
@@ -147,11 +143,20 @@ def walabot(ctx, api_location: str):
 
     _connect_to_and_initialize_device(wlbt)
 
-    tracker_thread = Thread(target=_update_thread, args=[wlbt])
-    tracker_thread.daemon = True
-    tracker_thread.start()
+    _create_tracker_thread(wlbt)
     circum.endpoint.start_endpoint(ctx, "walabot", run_walabot)
 
     wlbt.Stop()
     wlbt.Disconnect()
     wlbt.Clean()
+
+
+@click.command()
+@click.option('--api_location',
+              required=False,
+              type=str,
+              default=None,
+              help='Location Walabot API was installed in')
+@click.pass_context
+def walabot(ctx, api_location: str):
+    _cli(ctx, api_location)
