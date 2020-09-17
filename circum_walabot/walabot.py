@@ -36,7 +36,7 @@ def _update_thread(wlbt):
         tracking_semaphore.acquire()
 
         # invert x to convert from left hand walabot coordinates to right hand circum sensor coordinates
-        if targets and targets is not None:
+        if targets:
             tracking_info["objects"] = \
                 [{
                     "x": -1 * target.xPosCm / 100,
