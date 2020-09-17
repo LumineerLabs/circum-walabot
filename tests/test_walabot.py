@@ -239,3 +239,35 @@ def test__update_thread_gettargets_returns_targets_multiple():
         assert len(circum_walabot.walabot.tracking_info["objects"]) == 2
         circum_walabot.walabot.tracking_info["objects"] == expected_targets
 
+
+def test_run_walabot_updated_false():
+    with patch("circum_walabot.walabot.tracking_semaphore") as tracking_semaphore:
+        expected_calls = [
+            call.acquire(),
+            call.release(),
+        ]
+
+        assert circum_walabot.walabot.updated == False
+        assert run_walabot(None) is None
+
+        tracking_semaphore.assert_has_calls(expected_calls)
+
+
+
+def test_run_walabot_updated_true():
+    with patch("circum_walabot.walabot.tracking_semaphore") as tracking_semaphore:
+        expected_calls = [
+            call.acquire(),
+            call.release(),
+        ]
+
+        circum_walabot.walabot.updated = True
+        circum_walabot.walabot.tracking_info = [0, 1, 2]
+        ret = run_walabot(None)
+        assert ret is not None
+        assert ret == circum_walabot.walabot.tracking_info
+        assert ret is not circum_walabot.walabot.tracking_info
+
+        tracking_semaphore.assert_has_calls(expected_calls)
+
+        circum_walabot.walabot.update = False
