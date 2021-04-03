@@ -25,12 +25,18 @@ setup(
     install_requires=[
         'circum',
         'click',
+    ],
+    setup_requires=[
+        'setuptools',
         'setuptools-git-version',
-        'pytest'
+    ],
+    tests_require=[
+        'pytest',
+        'pytest-cov',
     ],
     entry_points={
         'circum.sensors': [
-            'walabot=circum_walabot.walabot:walabot_command'
+            'walabot=circum_walabot.walabot:walabot'
         ]
     },
     extras_require={
