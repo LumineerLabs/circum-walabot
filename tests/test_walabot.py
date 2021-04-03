@@ -3,7 +3,7 @@ from unittest.mock import DEFAULT, MagicMock, PropertyMock, call, patch
 import circum.endpoint  # noqa: F401
 
 import circum_walabot.walabot
-from circum_walabot.walabot import walabot, _update_thread, run_walabot
+from circum_walabot.walabot import _walabot, _update_thread, run_walabot
 
 import pytest
 
@@ -46,7 +46,7 @@ def _expect_init(path, custom_api_path=None):
                 loader.attach_mock(thread, 'thread')
                 loader.attach_mock(endpoint, 'endpoint')
 
-                walabot(None, custom_api_path)
+                _walabot(None, custom_api_path)
 
                 loader.assert_has_calls(expected_calls)
 
